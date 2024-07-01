@@ -1,3 +1,4 @@
+import os
 import  smtplib
 from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
@@ -10,6 +11,7 @@ class Mail:
         self.sender_email = sender_email
         self.host = host
         self.port = port
+        self.mail_password = os.environ.get('mail_app_password')
 
 
 
@@ -23,22 +25,22 @@ class Mail:
 
             with smtplib.SMTP("smtp.gmail.com", 587) as server:
                 server.starttls()
-                server.login(self.sender_email, "zhmk oubc rtjh htfx")
+                server.login(self.sender_email, self.mail_password)
                 server.send_message(msg)
                 print("mail sent successfully")
         except Exception as e:
             print(f"Exception has occured while sending email to {to_email}. Error {e}")
 
-    def send_email_using_mime(self, to_email, subject):
+    def send_email_using_mime(self, to_email, subject, html_data=None):
         try:
             msg = MIMEMultipart('alternative')
             msg["Subject"] = subject
             msg["From"] = self.sender_email
             msg["To"] = to_email
 
-
-            with open("mail_template.html", "r") as f:
-                html_data = f.read()
+            if not html_data:
+                with open("mail_template.html", "r") as f:
+                    html_data = f.read()
 
             mime_mail = MIMEText(html_data, "html")
             msg.attach(mime_mail)
@@ -46,7 +48,7 @@ class Mail:
 
             with smtplib.SMTP("smtp.gmail.com", 587) as server:
                 server.starttls()
-                server.login(self.sender_email, "zhmk oubc rtjh htfx")
+                server.login(self.sender_email, self.mail_password)
                 server.sendmail(self.sender_email, to_email, msg.as_string())
                 print("mail sent successfully")
         except Exception as e:

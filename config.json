@@ -1,0 +1,10 @@
+{
+  "excel_id": "1VQuQKR1E_4_Xq0UrGjp8WasxA71YyISsFWqJgpRrjlc",
+  "scopes": ["https://www.googleapis.com/auth/spreadsheets"],
+  "sender_email": "denisa.r95@gmail.com",
+  "color_codes": {
+    "green": "#4CAF50",
+    "red": "#af4c63",
+    "yellow": "#9e9624"
+  }
+}
