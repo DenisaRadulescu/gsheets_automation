@@ -6,7 +6,6 @@ from flask import Flask, render_template, request
 from gsheets import GoogleSheets
 import json
 
-
 app = Flask(__name__)
 
 
