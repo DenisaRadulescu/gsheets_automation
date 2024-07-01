@@ -22,7 +22,6 @@ class GoogleSheets:
 
 
 
-
 scopes = [
     "https://www.googleapis.com/auth/spreadsheets"
 ]
