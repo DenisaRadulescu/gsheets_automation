@@ -19,15 +19,16 @@ def read_html_template(path: str = "mail_template.html"):
         html_template= f.read()
         return html_template
 
+
 def run(employees: list, mail: Mail, config: dict):
     today = datetime.datetime.today()
-    html_template = read_html_template()
 
     for employee in employees:
         expiration_date = datetime.datetime.strptime(employee['Password Expiration Date'], "%d/%m/%Y")
         delta_days = (expiration_date - today).days
         if 3 >= delta_days >= 0:
             print(f"User {employee['Name']} needs reset his password yet. Mail will be sent.")
+            html_template = read_html_template()
             html_template = html_template.replace("[Recipient's Name]", employee['Name'])
             if delta_days < 1:
                 html_template = html_template.replace("[color_background]", config["color_codes"]["red"])
@@ -36,7 +37,7 @@ def run(employees: list, mail: Mail, config: dict):
             else:
                 html_template = html_template.replace("[color_background]", config["color_codes"]["green"])
 
-            mail.send_email_using_mime(employee['Mail'], " Password about to expire")
+            mail.send_email_using_mime(employee['Mail'], " Password about to expire", html_template)
         else:
             print(f"User {employee['Name']} does not need to reset his password yet.")
 
