@@ -10,7 +10,6 @@ import json
 app = Flask(__name__)
 
 
-
 def read_config(path:str = "config.json") -> dict:
     with open(path, "r") as f:
         config = json.loads(f.read())
