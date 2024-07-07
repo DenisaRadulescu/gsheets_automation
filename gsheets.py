@@ -53,9 +53,7 @@ if __name__ == '__main__':
     excel.insert_rows(["Anca Popescu", "anca_popescu@example.com", "Marketing","-", "-", "01/01/2025"], index=4)
 
     excel.modify_cell(1, 1, "Updated Name")
-
     new_sheet = excel.add_worksheet("Departments")
-
     excel.select_worksheet("Departments")
 
     employees = excel.get_values()
