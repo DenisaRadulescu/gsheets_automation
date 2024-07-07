@@ -1,7 +1,10 @@
 import json
-
 import gspread
 from google.oauth2.service_account import Credentials
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class GoogleSheets:
@@ -42,19 +45,21 @@ class GoogleSheets:
 
 
 if __name__ == '__main__':
+    try:
+        with open("config.json", "r") as f:
+            gsheets_config = json.loads(f.read())
 
-    with open("config.json", "r") as f:
-        gsheets_config = json.loads(f.read())
+        excel = GoogleSheets(scopes=gsheets_config["scopes"],
+                             credentials_path='credentials.json',
+                             excel_key=gsheets_config["excel_id"])
 
-    excel = GoogleSheets(scopes=gsheets_config["scopes"],
-                         credentials_path='credentials.json',
-                         excel_key=gsheets_config["excel_id"])
+        excel.insert_rows(["Anca Popescu", "anca_popescu@example.com", "Marketing","-", "-", "01/01/2025"], index=4)
 
-    excel.insert_rows(["Anca Popescu", "anca_popescu@example.com", "Marketing","-", "-", "01/01/2025"], index=4)
+        excel.modify_cell(1, 1, "Updated Name")
+        new_sheet = excel.add_worksheet("Departments")
+        excel.select_worksheet("Departments")
 
-    excel.modify_cell(1, 1, "Updated Name")
-    new_sheet = excel.add_worksheet("Departments")
-    excel.select_worksheet("Departments")
-
-    employees = excel.get_values()
-    print(employees)
+        employees = excel.get_values()
+        logger.info(f"Retrieved {len(employees)} employee records")
+    except Exception as e:
+        logger.error(f"An error occurred: {e} has occured")

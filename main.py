@@ -3,6 +3,10 @@ import json
 
 from gsheets import GoogleSheets
 from mail import Mail
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # o sa avem un google sheet ce va contine nume, mail, data expirare parola
 # vom face automatizare care trimite mailuri angajatilor carora urmeaza sa le expire parola
@@ -39,13 +43,16 @@ def run(employees: list, mail: Mail, config: dict):
 
             mail.send_email_using_mime(employee['Mail'], " Password about to expire", html_template)
         else:
-            print(f"User {employee['Name']} does not need to reset his password yet.")
+            logger.info(f"User {employee['Name']} does not need to reset his password yet.")
 
 
 
 if __name__ == '__main__':
-    config = read_config()
-    mail = Mail(config['sender_email'])
-    excel = GoogleSheets(config['scopes'], "credentials.json", config['excel_id'])
-    employees = excel.get_values()
-    run(employees, mail, config)
+    try:
+        config = read_config()
+        mail = Mail(config['sender_email'])
+        excel = GoogleSheets(config['scopes'], "credentials.json", config['excel_id'])
+        employees = excel.get_values()
+        run(employees, mail, config)
+    except Exception as e:
+        logger.error(f"An error {e} has occurred")

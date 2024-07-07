@@ -3,6 +3,10 @@ import  smtplib
 from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class Mail:
@@ -27,9 +31,9 @@ class Mail:
                 server.starttls()
                 server.login(self.sender_email, self.mail_password)
                 server.send_message(msg)
-                print("mail sent successfully")
+                logger.info("mail sent successfully")
         except Exception as e:
-            print(f"Exception has occured while sending email to {to_email}. Error {e}")
+            logger.error(f"Exception has occured while sending email to {to_email}. Error {e}")
 
     def send_email_using_mime(self, to_email, subject, html_data=None):
         try:
@@ -50,9 +54,9 @@ class Mail:
                 server.starttls()
                 server.login(self.sender_email, self.mail_password)
                 server.sendmail(self.sender_email, to_email, msg.as_string())
-                print("mail sent successfully")
+                logger.info("mail sent successfully")
         except Exception as e:
-            print(f"Exception has occured while sending email to {to_email}. Error {e}")
+            logger.error(f"Exception has occured while sending email to {to_email}. Error {e}")
 
 # my_email = "denisa.r95@gmail.com"
 #
